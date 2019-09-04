@@ -2,11 +2,7 @@ FROM ubuntu:18.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# update lists
-RUN apt-get update
-
-# apache, php, utils
-RUN apt-get install -yq --no-install-recommends \
+RUN apt-get update && apt-get install -yq --no-install-recommends \
     apt-utils \
     apache2 \
     libapache2-mod-php7.2 \
@@ -23,10 +19,12 @@ RUN apt-get install -yq --no-install-recommends \
     php7.2-intl \
     php-imagick \
     openssl \
+    sudo \
     vim \
     curl \
     git \
-    imagemagick \
+    zip \
+    make \
     mysql-client \
     iputils-ping \
     locales \
@@ -44,12 +42,6 @@ RUN echo "ServerName localhost" | tee /etc/apache2/conf-available/servername.con
 RUN a2enconf servername
 #RUN a2dissite 000-default
 
-EXPOSE 80 443
+RUN rm /var/www/html/index.html
 
 WORKDIR /root
-
-#RUN rm index.html
-
-#HEALTHCHECK --interval=5s --timeout=3s --retries=3 CMD curl -f http://localhost || exit 1
-
-CMD apachectl -D FOREGROUND
